@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import SectionHeader from '../common/SectionHeader';
 import LazyImage from '../common/LazyImage';
 import { PlayBadge } from '../common/Badges';
@@ -35,15 +35,15 @@ export default function VideoCarousel({ videos = [] }) {
   if (!videos || videos.length === 0) return null;
 
   return (
-    <section className="w-full my-8">
+    <section className="w-full my-6">
       <SectionHeader title="ভিডিও" href="/video" />
 
-      {/* Carousel Container with Relative Controls */}
+      {/* Carousel Container with Controls */}
       <div className="relative group">
         {/* Left 36px Square Button */}
         <button
           onClick={() => scroll('left')}
-          className="absolute -left-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 bg-ink hover:bg-black text-white flex items-center justify-center shadow transition-opacity"
+          className="absolute -left-3 top-[35%] -translate-y-1/2 z-20 w-9 h-9 bg-ink hover:bg-black text-white flex items-center justify-center transition-opacity"
           aria-label="পূর্ববর্তী ভিডিও"
         >
           <ChevronLeft className="w-5 h-5 text-white" />
@@ -53,15 +53,15 @@ export default function VideoCarousel({ videos = [] }) {
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar py-2 px-1"
+          className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar py-1"
         >
           {videos.map((item) => (
             <article
               key={item._id}
-              className="w-[255px] flex-shrink-0 snap-start bg-[#E7F0FB] p-2.5 flex flex-col group/card"
+              className="w-[255px] flex-shrink-0 snap-start flex flex-col group/card bg-[#E7F0FB] overflow-hidden"
             >
               <Link to={`/video/${item.slug}`} className="flex flex-col h-full">
-                {/* 3:2 Image with Red Play Badge */}
+                {/* 3:2 Image: Flush to top and side edges */}
                 <div className="w-full relative">
                   <LazyImage
                     src={item.coverImage?.url}
@@ -71,22 +71,21 @@ export default function VideoCarousel({ videos = [] }) {
                   <PlayBadge className="top-2 left-2" />
                 </div>
 
-                {/* Content: centered text */}
-                <div className="flex-1 flex flex-col justify-between pt-2.5 text-center">
+                {/* Content: centered text with padding */}
+                <div className="flex-1 flex flex-col justify-between p-3.5 text-center">
                   <div>
                     <h3 className="font-headline text-[15px] font-bold leading-[1.35] text-primary group-hover/card:text-brand-red transition-colors line-clamp-3">
                       {item.title}
                     </h3>
                     {item.excerpt && (
-                      <p className="text-[12px] text-excerpt leading-[1.45] mt-1.5 line-clamp-2">
+                      <p className="text-[12px] text-excerpt leading-[1.48] mt-2 line-clamp-2">
                         {item.excerpt}
                       </p>
                     )}
                   </div>
 
-                  <div className="flex items-center justify-center gap-1 text-[11px] text-meta mt-2.5 pt-2 border-t border-[#D5E3F5]">
-                    <Clock className="w-3 h-3 text-meta" />
-                    <span>{getRelativeTimeBangla(item.publishedAt)}</span>
+                  <div className="text-[11px] text-meta mt-3">
+                    {getRelativeTimeBangla(item.publishedAt)}
                   </div>
                 </div>
               </Link>
@@ -97,7 +96,7 @@ export default function VideoCarousel({ videos = [] }) {
         {/* Right 36px Square Button */}
         <button
           onClick={() => scroll('right')}
-          className="absolute -right-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 bg-ink hover:bg-black text-white flex items-center justify-center shadow transition-opacity"
+          className="absolute -right-3 top-[35%] -translate-y-1/2 z-20 w-9 h-9 bg-ink hover:bg-black text-white flex items-center justify-center transition-opacity"
           aria-label="পরবর্তী ভিডিও"
         >
           <ChevronRight className="w-5 h-5 text-white" />
@@ -105,7 +104,7 @@ export default function VideoCarousel({ videos = [] }) {
       </div>
 
       {/* 6 Pagination Dots */}
-      <div className="flex items-center justify-center gap-2 mt-4">
+      <div className="flex items-center justify-center gap-1.5 mt-4">
         {Array.from({ length: totalDots }).map((_, i) => (
           <span
             key={i}

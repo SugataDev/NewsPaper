@@ -1,25 +1,27 @@
-import React, { Suspense, lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { HelmetProvider } from 'react-helmet-async';
-import { AuthProvider } from './context/AuthContext';
+import React, { Suspense, lazy } from "react";
+import { Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { HelmetProvider } from "react-helmet-async";
+import { AuthProvider } from "./context/AuthContext";
 
 // Route-level code splitting
-const HomePage = lazy(() => import('./pages/HomePage'));
-const ArticlePage = lazy(() => import('./pages/ArticlePage'));
-const CategoryPage = lazy(() => import('./pages/CategoryPage'));
-const SearchPage = lazy(() => import('./pages/SearchPage'));
-const LoginPage = lazy(() => import('./pages/LoginPage'));
-const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const HomePage = lazy(() => import("./pages/HomePage"));
+const ArticlePage = lazy(() => import("./pages/ArticlePage"));
+const CategoryPage = lazy(() => import("./pages/CategoryPage"));
+const SearchPage = lazy(() => import("./pages/SearchPage"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 // Admin CMS
-const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
-const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
-const AdminArticlesList = lazy(() => import('./pages/admin/AdminArticlesList'));
-const AdminArticleEditor = lazy(() => import('./pages/admin/AdminArticleEditor'));
-const AdminCategories = lazy(() => import('./pages/admin/AdminCategories'));
-const AdminTopics = lazy(() => import('./pages/admin/AdminTopics'));
-const AdminAds = lazy(() => import('./pages/admin/AdminAds'));
+const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminArticlesList = lazy(() => import("./pages/admin/AdminArticlesList"));
+const AdminArticleEditor = lazy(
+  () => import("./pages/admin/AdminArticleEditor"),
+);
+const AdminCategories = lazy(() => import("./pages/admin/AdminCategories"));
+const AdminTopics = lazy(() => import("./pages/admin/AdminTopics"));
+const AdminAds = lazy(() => import("./pages/admin/AdminAds"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,8 +53,14 @@ export default function App() {
               <Route path="/login" element={<LoginPage />} />
 
               {/* Bangladesh Cascading Location Routes */}
-              <Route path="/bangladesh/:division/:district/:upazila" element={<CategoryPage />} />
-              <Route path="/bangladesh/:division/:district" element={<CategoryPage />} />
+              <Route
+                path="/bangladesh/:division/:district/:upazila"
+                element={<CategoryPage />}
+              />
+              <Route
+                path="/bangladesh/:division/:district"
+                element={<CategoryPage />}
+              />
               <Route path="/bangladesh/:division" element={<CategoryPage />} />
 
               {/* Admin CMS */}
@@ -60,7 +68,10 @@ export default function App() {
                 <Route index element={<AdminDashboard />} />
                 <Route path="articles" element={<AdminArticlesList />} />
                 <Route path="articles/new" element={<AdminArticleEditor />} />
-                <Route path="articles/:id/edit" element={<AdminArticleEditor />} />
+                <Route
+                  path="articles/:id/edit"
+                  element={<AdminArticleEditor />}
+                />
                 <Route path="categories" element={<AdminCategories />} />
                 <Route path="topics" element={<AdminTopics />} />
                 <Route path="ads" element={<AdminAds />} />

@@ -88,15 +88,15 @@ export default function HomePage() {
             {/* 2. Ad band (Leaderboard, ~90px tall, full-bleed #F0F0F0) */}
             <AdBanner slot="leaderboard" height="h-[90px]" fullBleed={true} />
 
-            <div className="max-w-[1240px] mx-auto px-4">
+            <div className="max-w-[1248px] mx-auto px-4">
               {/* 3. Hero Section (3 columns: 3/6/3) */}
               <HeroSection heroData={data?.hero} />
             </div>
 
             {/* 4. Ad band (Billboard, ~320px tall, full-bleed #F0F0F0) */}
-            <AdBanner slot="billboard" height="h-[300px] md:h-[320px]" fullBleed={true} />
+            <AdBanner slot="billboard" height="h-[280px]" fullBleed={true} />
 
-            <div className="max-w-[1240px] mx-auto px-4">
+            <div className="max-w-[1248px] mx-auto px-4">
               {/* 5. Trending Topics Row */}
               <TrendingTopicsBar topics={data?.trendingTopics || []} />
 
@@ -107,7 +107,7 @@ export default function HomePage() {
             {/* 7. Promo Strip (Full-bleed #FDF1EF band with 4 dark cards) */}
             <PromoStrip items={data?.promoStrip || []} />
 
-            <div className="max-w-[1240px] mx-auto px-4">
+            <div className="max-w-[1248px] mx-auto px-4">
               {/* 8. Most-read + Sports side by side (~25% / ~75%) */}
               <MostReadAndSportsSection
                 mostReadAndSports={data?.mostReadAndSports}
@@ -133,7 +133,7 @@ export default function HomePage() {
             </div>
 
             {/* 15. Ad band (Bottom, ~320px tall, full-bleed #F0F0F0) */}
-            <AdBanner slot="bottom-billboard" height="h-[300px] md:h-[320px]" fullBleed={true} />
+            <AdBanner slot="bottom-billboard" height="h-[280px]" fullBleed={true} />
           </>
         )}
       </main>

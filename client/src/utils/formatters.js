@@ -85,3 +85,21 @@ export function generateSlug(text) {
     .replace(/[\s-]+/g, '-')
     .replace(/^-+|-+$/g, '');
 }
+
+/**
+ * Cleanly separate kicker and title to prevent duplicate/double kickers
+ */
+export function parseKickerAndTitle(rawTitle = '', defaultKicker = '') {
+  let cleanTitle = (rawTitle || '').trim();
+  let kicker = (defaultKicker || '').trim();
+
+  const match = cleanTitle.match(/^([^•:–]+)\s*[•:–]\s*(.+)$/);
+  if (match) {
+    if (!kicker) {
+      kicker = match[1].trim();
+    }
+    cleanTitle = match[2].trim();
+  }
+
+  return { kicker, title: cleanTitle };
+}

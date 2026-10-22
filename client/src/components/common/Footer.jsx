@@ -8,7 +8,7 @@ export default function Footer() {
 
   return (
     <footer className="w-full bg-[#F5F5F5] border-t border-hairline mt-12 pt-10 pb-8 text-primary">
-      <div className="max-w-[1240px] mx-auto px-4">
+      <div className="max-w-[1248px] mx-auto px-4">
         {/* Row 1: Wordmark & Social Icons */}
         <div className="flex flex-col md:flex-row items-center justify-between pb-6 border-b border-hairline gap-4">
           <Link to="/" className="inline-flex items-center">

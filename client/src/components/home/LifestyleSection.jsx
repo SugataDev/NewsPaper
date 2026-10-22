@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Clock } from 'lucide-react';
 import SectionHeader from '../common/SectionHeader';
 import LazyImage from '../common/LazyImage';
-import { CameraBadge, PlayBadge } from '../common/Badges';
+import { CameraBadge } from '../common/Badges';
 import { getRelativeTimeBangla } from '../../utils/formatters';
 
 export default function LifestyleSection({ lifestyleItems = [] }) {
@@ -13,25 +12,24 @@ export default function LifestyleSection({ lifestyleItems = [] }) {
     <section className="w-full my-8">
       <SectionHeader title="জীবনযাপন" href="/lifestyle" />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-x divide-hairline items-stretch">
         {lifestyleItems.slice(0, 4).map((item, index) => (
-          <article key={item._id}>
+          <article key={item._id} className={index === 0 ? 'pr-4' : index === 3 ? 'pl-4' : 'px-4'}>
             <Link
               to={`/lifestyle/${item.slug}`}
               className="group flex flex-col h-full"
             >
-              {/* Near-square image with badge on some */}
+              {/* Near-square image with camera badge on 3rd and 4th card */}
               <div className="w-full relative mb-2.5">
                 <LazyImage
                   src={item.coverImage?.url}
                   alt={item.title}
-                  aspectRatio="aspect-square"
+                  aspectRatio="aspect-[4/3]"
                 />
-                {index === 0 && <CameraBadge />}
-                {index === 2 && <PlayBadge />}
+                {(index === 2 || index === 3) && <CameraBadge className="top-2 left-2" />}
               </div>
 
-              <h4 className="font-headline text-[17px] md:text-[18px] font-bold leading-[1.35] text-primary group-hover:text-brand-red transition-colors line-clamp-3">
+              <h4 className="font-headline text-[17px] font-bold leading-[1.35] text-primary group-hover:text-brand-red transition-colors line-clamp-3">
                 {item.title}
               </h4>
 
@@ -41,9 +39,8 @@ export default function LifestyleSection({ lifestyleItems = [] }) {
                 </p>
               )}
 
-              <div className="flex items-center gap-1 text-[11px] text-meta mt-2 pt-1">
-                <Clock className="w-3 h-3 text-meta" />
-                <span>{getRelativeTimeBangla(item.publishedAt)}</span>
+              <div className="text-[11px] text-meta mt-auto pt-2">
+                {getRelativeTimeBangla(item.publishedAt)}
               </div>
             </Link>
           </article>
