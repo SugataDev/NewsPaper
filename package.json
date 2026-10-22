@@ -14,11 +14,14 @@
     "build": "npm run build -w client",
     "lint": "eslint .",
     "test": "npm run test -w server",
-    "qa:shot": "node scripts/shot.mjs"
+    "qa:shot": "node scripts/shot.mjs",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
     "eslint": "^9.14.0",
+    "gh-pages": "^6.3.0",
     "playwright": "^1.64.1",
     "prettier": "^3.3.3"
   }
