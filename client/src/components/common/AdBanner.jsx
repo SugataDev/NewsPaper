@@ -18,7 +18,7 @@ export default function AdBanner({
 
   const content = (
     <div
-      className={`w-full ${height} bg-ad flex flex-col items-center justify-center relative text-[#999999] border-y border-hairline ${className}`}
+      className={`w-full h-[250px] md:${height} bg-ad flex flex-col items-center justify-center relative text-[#999999] border-y border-hairline ${className}`}
     >
       <span className="text-[11px] font-body tracking-wider">বিজ্ঞাপন</span>
     </div>

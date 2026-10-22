@@ -21,8 +21,8 @@ export default function HeroSection({ heroData }) {
   return (
     <section className="w-full my-6">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
-        {/* --- LEFT COLUMN (3/12 ~ 25%) --- */}
-        <div className="lg:col-span-3 lg:pr-5 lg:border-r border-hairline flex flex-col divide-y divide-hairline">
+        {/* --- LEFT COLUMN (3/12 ~ 25%) - On mobile appears after lead --- */}
+        <div className="order-2 lg:order-1 lg:col-span-3 lg:pr-5 lg:border-r border-hairline flex flex-col divide-y divide-hairline mt-6 lg:mt-0">
           {left.map((item, index) => {
             const hasThumb = index % 2 === 1 || index === 2 || index === 4;
             return (
@@ -66,8 +66,8 @@ export default function HeroSection({ heroData }) {
           })}
         </div>
 
-        {/* --- CENTER COLUMN (6/12 ~ 50%) --- */}
-        <div className="lg:col-span-6 lg:px-6 lg:border-r border-hairline mt-6 lg:mt-0 flex flex-col">
+        {/* --- CENTER COLUMN (6/12 ~ 50%) - On mobile appears first as lead --- */}
+        <div className="order-1 lg:order-2 lg:col-span-6 lg:px-6 lg:border-r border-hairline flex flex-col">
           {/* (a) Lead Story */}
           {centerLead && (
             <article className="pb-5 border-b border-hairline">
@@ -209,7 +209,7 @@ export default function HeroSection({ heroData }) {
         </div>
 
         {/* --- RIGHT COLUMN (3/12 ~ 25%) --- */}
-        <div className="lg:col-span-3 lg:pl-5 mt-6 lg:mt-0 flex flex-col">
+        <div className="order-3 lg:order-3 lg:col-span-3 lg:pl-5 mt-6 lg:mt-0 flex flex-col">
           {/* 300x250 AdSlot */}
           <AdBanner slot="hero-right" size="300x250" />
 
