@@ -68,7 +68,7 @@ router.get('/stats', async (req, res, next) => {
   }
 });
 
-// --- ARTICLES ---
+// Articles endpoints
 
 // GET /api/admin/articles
 router.get('/articles', async (req, res, next) => {
@@ -192,7 +192,7 @@ router.delete('/articles/:id', async (req, res, next) => {
   }
 });
 
-// --- CATEGORIES ---
+// Category management
 router.post('/categories', authorize('admin', 'editor'), async (req, res, next) => {
   try {
     const { nameBn, slug, order, showInNav, parent } = req.body;
@@ -227,7 +227,7 @@ router.delete('/categories/:id', authorize('admin'), async (req, res, next) => {
   }
 });
 
-// --- TOPICS ---
+// Topic management
 router.get('/topics', async (req, res, next) => {
   try {
     const topics = await Topic.find().sort({ order: 1 }).lean();
@@ -273,7 +273,7 @@ router.delete('/topics/:id', authorize('admin'), async (req, res, next) => {
   }
 });
 
-// --- AUTHORS ---
+// Author management
 router.get('/authors', async (req, res, next) => {
   try {
     const authors = await Author.find().sort({ nameBn: 1 }).lean();
@@ -317,7 +317,7 @@ router.delete('/authors/:id', authorize('admin'), async (req, res, next) => {
   }
 });
 
-// --- ADS ---
+// Advertisement management
 router.get('/ads', async (req, res, next) => {
   try {
     const ads = await Ad.find().sort({ createdAt: -1 }).lean();
@@ -357,7 +357,7 @@ router.delete('/ads/:id', authorize('admin'), async (req, res, next) => {
   }
 });
 
-// --- USERS ---
+// User management
 router.get('/users', authorize('admin'), async (req, res, next) => {
   try {
     const users = await User.find().select('-passwordHash').sort({ createdAt: -1 }).lean();

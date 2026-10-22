@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { Article } from '../models/Article.js';
+import { Location } from '../models/Location.js';
+import { Topic } from '../models/Topic.js';
 
 const router = Router();
 
@@ -19,19 +21,75 @@ router.get('/', async (req, res, next) => {
       limit = 12,
     } = req.query;
 
-    const query = { status: 'published' };
+    const conditions = [{ status: 'published' }];
 
-    if (category) query.category = category;
-    if (sub) query.subCategory = sub;
-    if (tag) query.tags = tag;
-    if (type) query.type = type;
-    if (division) query['location.division'] = division;
-    if (district) query['location.district'] = district;
-    if (upazila) query['location.upazila'] = upazila;
+    if (category) conditions.push({ category });
+    if (sub) conditions.push({ subCategory: sub });
+    if (type) conditions.push({ type });
+
+    if (division) {
+      const loc = await Location.findOne({
+        type: 'division',
+        $or: [{ slug: division }, { nameBn: division }],
+      }).lean();
+      if (loc) {
+        conditions.push({ 'location.division': { $in: [loc.slug, loc.nameBn] } });
+      } else {
+        conditions.push({ 'location.division': division });
+      }
+    }
+
+    if (district) {
+      const loc = await Location.findOne({
+        type: 'district',
+        $or: [{ slug: district }, { nameBn: district }],
+      }).lean();
+      if (loc) {
+        conditions.push({ 'location.district': { $in: [loc.slug, loc.nameBn] } });
+      } else {
+        conditions.push({ 'location.district': district });
+      }
+    }
+
+    if (upazila) {
+      const loc = await Location.findOne({
+        type: 'upazila',
+        $or: [{ slug: upazila }, { nameBn: upazila }],
+      }).lean();
+      if (loc) {
+        conditions.push({ 'location.upazila': { $in: [loc.slug, loc.nameBn] } });
+      } else {
+        conditions.push({ 'location.upazila': upazila });
+      }
+    }
+
+    if (tag) {
+      const t = await Topic.findOne({
+        $or: [{ slug: tag }, { nameBn: tag }],
+      }).lean();
+      if (t) {
+        conditions.push({
+          $or: [
+            { tags: t.slug },
+            { tags: t.nameBn },
+            { tags: { $regex: new RegExp(t.nameBn, 'i') } },
+          ],
+        });
+      } else {
+        conditions.push({
+          $or: [
+            { tags: tag },
+            { tags: { $regex: new RegExp(tag, 'i') } },
+          ],
+        });
+      }
+    }
 
     if (q) {
-      query.$text = { $search: q };
+      conditions.push({ $text: { $search: q } });
     }
+
+    const query = conditions.length === 1 ? conditions[0] : { $and: conditions };
 
     const pageNum = Math.max(1, parseInt(page, 10));
     const limitNum = Math.min(50, Math.max(1, parseInt(limit, 10)));

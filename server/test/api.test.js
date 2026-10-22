@@ -90,4 +90,27 @@ describe('API Endpoints Tests', () => {
     const data = await res.json();
     assert.strictEqual(data.length, 8);
   });
+
+  test('GET /api/topics/:slug returns single topic', async () => {
+    const res = await fetch(`${baseUrl}/api/topics/national-election`);
+    assert.strictEqual(res.status, 200);
+    const data = await res.json();
+    assert.strictEqual(data.slug, 'national-election');
+    assert.strictEqual(data.nameBn, 'জাতীয় নির্বাচন');
+  });
+
+  test('GET /api/articles?division=dhaka resolves slug and returns articles', async () => {
+    const res = await fetch(`${baseUrl}/api/articles?division=dhaka&limit=5`);
+    assert.strictEqual(res.status, 200);
+    const data = await res.json();
+    assert.ok(data.articles.length > 0);
+  });
+
+  test('GET /api/ads/leaderboard returns active ad', async () => {
+    const res = await fetch(`${baseUrl}/api/ads/leaderboard`);
+    assert.strictEqual(res.status, 200);
+    const data = await res.json();
+    assert.strictEqual(data.slot, 'leaderboard');
+    assert.strictEqual(data.active, true);
+  });
 });

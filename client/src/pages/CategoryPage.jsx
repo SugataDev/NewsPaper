@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useSearchParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, useLocation, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Clock } from 'lucide-react';
 import Header from '../components/common/Header';
@@ -23,29 +23,65 @@ const categoryTitles = {
 };
 
 export default function CategoryPage() {
-  const { category } = useParams();
+  const params = useParams();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
+
+  const isTopicPage = location.pathname.startsWith('/topic/');
+  const topicSlug = isTopicPage ? params.slug : null;
+  const [topicName, setTopicName] = useState('');
+
+  const isBangladeshSection = location.pathname.startsWith('/bangladesh');
+  const category = isTopicPage ? null : (params.category || (isBangladeshSection ? 'bangladesh' : null));
+
+  const division = params.division || searchParams.get('division');
+  const district = params.district || searchParams.get('district');
+  const upazila = params.upazila || searchParams.get('upazila');
+
   const [articles, setArticles] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
 
-  const division = searchParams.get('division');
-  const district = searchParams.get('district');
-  const upazila = searchParams.get('upazila');
+  // Fetch topic details if on a topic feed
+  useEffect(() => {
+    if (isTopicPage && topicSlug) {
+      fetch(`/api/topics/${topicSlug}`)
+        .then((res) => {
+          if (res.ok) return res.json();
+          return null;
+        })
+        .then((t) => {
+          if (t && t.nameBn) setTopicName(t.nameBn);
+        })
+        .catch(() => {});
+    }
+  }, [isTopicPage, topicSlug]);
 
-  const pageTitle = categoryTitles[category] || category || 'সংবাদ';
+  let pageTitle = 'সংবাদ';
+  if (isTopicPage) {
+    pageTitle = topicName ? `আলোচিত বিষয়: ${topicName}` : `আলোচিত বিষয়: ${topicSlug}`;
+  } else if (division || district || upazila) {
+    const locParts = [upazila, district, division].filter(Boolean);
+    pageTitle = `বাংলাদেশ • ${locParts.join(' - ')} এর খবর`;
+  } else if (category) {
+    pageTitle = categoryTitles[category] || category;
+  }
 
   useEffect(() => {
     setLoading(true);
     setPage(1);
 
     const queryParams = new URLSearchParams();
-    if (category && category !== 'latest') queryParams.append('category', category);
-    if (division) queryParams.append('division', division);
-    if (district) queryParams.append('district', district);
-    if (upazila) queryParams.append('upazila', upazila);
+    if (isTopicPage && topicSlug) {
+      queryParams.append('tag', topicSlug);
+    } else {
+      if (category && category !== 'latest') queryParams.append('category', category);
+      if (division) queryParams.append('division', division);
+      if (district) queryParams.append('district', district);
+      if (upazila) queryParams.append('upazila', upazila);
+    }
     queryParams.append('page', '1');
     queryParams.append('limit', '13');
 
@@ -60,7 +96,7 @@ export default function CategoryPage() {
         console.error(err);
         setLoading(false);
       });
-  }, [category, division, district, upazila]);
+  }, [category, division, district, upazila, isTopicPage, topicSlug]);
 
   const loadMore = () => {
     if (page >= totalPages) return;
@@ -68,10 +104,14 @@ export default function CategoryPage() {
 
     const nextPage = page + 1;
     const queryParams = new URLSearchParams();
-    if (category && category !== 'latest') queryParams.append('category', category);
-    if (division) queryParams.append('division', division);
-    if (district) queryParams.append('district', district);
-    if (upazila) queryParams.append('upazila', upazila);
+    if (isTopicPage && topicSlug) {
+      queryParams.append('tag', topicSlug);
+    } else {
+      if (category && category !== 'latest') queryParams.append('category', category);
+      if (division) queryParams.append('division', division);
+      if (district) queryParams.append('district', district);
+      if (upazila) queryParams.append('upazila', upazila);
+    }
     queryParams.append('page', nextPage.toString());
     queryParams.append('limit', '12');
 
@@ -115,14 +155,25 @@ export default function CategoryPage() {
             <div className="h-60 bg-gray-200 rounded" />
           </div>
         ) : articles.length === 0 ? (
-          <div className="text-center py-20 text-gray-500">
-            <p className="text-lg font-bold">এই বিভাগে কোনো সংবাদ পাওয়া যায়নি</p>
+          <div className="text-center py-20 px-4 bg-gray-50 border border-hairline rounded my-6">
+            <h3 className="text-lg font-bold font-headline text-primary mb-2">
+              এই বিভাগে বর্তমানে কোনো সংবাদ পাওয়া যায়নি
+            </h3>
+            <p className="text-sm text-gray-500 max-w-md mx-auto mb-6">
+              অনুগ্রহ করে অন্য কোনো বিভাগ বা আলোচিত বিষয় নির্বাচন করুন অথবা কিছুক্ষণ পর আবার চেষ্টা করুন।
+            </p>
+            <Link
+              to="/"
+              className="px-6 py-2.5 bg-brand-red hover:bg-red-700 text-white font-semibold text-sm rounded transition-colors inline-block"
+            >
+              হোমপেজে ফিরে যান
+            </Link>
           </div>
         ) : (
           <>
             {/* Featured Lead Row */}
             {featured && (
-              <div className="mb-10 pb-8 border-b border-hairline">
+              <article className="mb-10 pb-8 border-b border-hairline">
                 <Link
                   to={`/${featured.category}/${featured.slug}`}
                   className="group grid grid-cols-1 md:grid-cols-12 gap-6 items-center"
@@ -152,7 +203,7 @@ export default function CategoryPage() {
                     </div>
                   </div>
                 </Link>
-              </div>
+              </article>
             )}
 
             {/* 3-Column Articles Grid */}

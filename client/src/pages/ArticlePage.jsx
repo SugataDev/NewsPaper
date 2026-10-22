@@ -22,15 +22,17 @@ import {
 } from '../utils/formatters';
 
 export default function ArticlePage() {
-  const { category, slug } = useParams();
+  const { category, slug, division } = useParams();
+  const effectiveSlug = slug || division;
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
+    if (!effectiveSlug) return;
     setLoading(true);
-    fetch(`/api/articles/${slug}`)
+    fetch(`/api/articles/${effectiveSlug}`)
       .then((res) => {
         if (!res.ok) throw new Error('সংবাদটি পাওয়া যায়নি');
         return res.json();
@@ -47,7 +49,7 @@ export default function ArticlePage() {
         setError(err.message);
         setLoading(false);
       });
-  }, [slug]);
+  }, [effectiveSlug]);
 
   const copyUrl = () => {
     navigator.clipboard.writeText(window.location.href);

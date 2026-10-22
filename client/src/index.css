@@ -14,7 +14,7 @@
   --color-page-bg: #ffffff;
   --color-text: #111111;
   --color-excerpt: #555555;
-  --color-meta: #8a8a8a;
+  --color-meta: #666666;
   --color-brand-red: #d60000;
   --color-brand-blue: #2172bf;
   --color-blue-tint: #e7f0fb;
@@ -56,6 +56,12 @@ h6,
 .font-headline {
   font-family: var(--font-headline);
   font-weight: 700;
+}
+
+/* Focus visibility for accessibility (WCAG AA & R-32) */
+:focus-visible {
+  outline: 2px solid var(--color-brand-red);
+  outline-offset: 2px;
 }
 
 /* Hairline dividers */

@@ -1,8 +1,21 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { X, Search, ChevronRight } from 'lucide-react';
 
 export default function CategoryDrawer({ isOpen, onClose, categories = [] }) {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
@@ -38,7 +51,8 @@ export default function CategoryDrawer({ isOpen, onClose, categories = [] }) {
               e.preventDefault();
               const q = e.target.search.value;
               if (q.trim()) {
-                window.location.href = `/search?q=${encodeURIComponent(q.trim())}`;
+                onClose();
+                navigate(`/search?q=${encodeURIComponent(q.trim())}`);
               }
             }}
             className="relative"

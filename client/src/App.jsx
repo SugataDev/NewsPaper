@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useParams } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "./context/AuthContext";
@@ -11,6 +11,7 @@ const CategoryPage = lazy(() => import("./pages/CategoryPage"));
 const SearchPage = lazy(() => import("./pages/SearchPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
+const StaticEditorialPage = lazy(() => import("./pages/StaticEditorialPage"));
 
 // Admin CMS
 const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
@@ -40,6 +41,19 @@ function PageLoader() {
   );
 }
 
+const divisionSlugs = [
+  'dhaka', 'chattogram', 'rajshahi', 'khulna', 'barishal', 'sylhet', 'rangpur', 'mymensingh',
+  'ঢাকা', 'চট্টগ্রাম', 'রাজশাহী', 'খুলনা', 'বরিশাল', 'সিলেট', 'রংপুর', 'ময়মনসিংহ'
+];
+
+function BangladeshRouteDispatcher() {
+  const { division } = useParams();
+  if (division && divisionSlugs.includes(division.toLowerCase())) {
+    return <CategoryPage />;
+  }
+  return <ArticlePage />;
+}
+
 export default function App() {
   return (
     <HelmetProvider>
@@ -52,6 +66,16 @@ export default function App() {
               <Route path="/search" element={<SearchPage />} />
               <Route path="/login" element={<LoginPage />} />
 
+              {/* Corporate & Editorial Information Pages */}
+              <Route path="/about" element={<StaticEditorialPage />} />
+              <Route path="/contact" element={<StaticEditorialPage />} />
+              <Route path="/advertise" element={<StaticEditorialPage />} />
+              <Route path="/privacy" element={<StaticEditorialPage />} />
+              <Route path="/terms" element={<StaticEditorialPage />} />
+
+              {/* Trending Topics Feed */}
+              <Route path="/topic/:slug" element={<CategoryPage />} />
+
               {/* Bangladesh Cascading Location Routes */}
               <Route
                 path="/bangladesh/:division/:district/:upazila"
@@ -61,7 +85,7 @@ export default function App() {
                 path="/bangladesh/:division/:district"
                 element={<CategoryPage />}
               />
-              <Route path="/bangladesh/:division" element={<CategoryPage />} />
+              <Route path="/bangladesh/:division" element={<BangladeshRouteDispatcher />} />
 
               {/* Admin CMS */}
               <Route path="/admin" element={<AdminLayout />}>
