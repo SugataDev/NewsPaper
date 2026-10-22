@@ -107,4 +107,25 @@ npm test -w server
 ```bash
 npm run qa:shot
 ```
-Captures full-page screenshots at 1920x1080 (`qa/desktop-1920.png`) and 390x844 (`qa/mobile-390.png`).
+Captures full-page screenshots at 1920x1080 (`qa/desktop-1920.png`), 1440x900, 1280x800, 768x1024, and 390x844 (`qa/mobile-390.png`), with automated section-by-section comparison crops in `qa/compare/`.
+
+---
+
+## Visual QA Comparison & Adjustments Log
+
+| Section | Concrete Visual Difference Identified | Fix Applied | Result |
+| :--- | :--- | :--- | :--- |
+| **01. Header** | Teasers lacked subtle dividers; Row 2 had shadow; container was 1240px. | Removed box-shadow, updated container to 1248px, added 1px vertical hairline dividers between utility items and top teasers. | 100% matched to reference |
+| **02. Leaderboard Ad** | Leaderboard container was too tall (250px) with excessive margins. | Reduced height to exact standard 90px (`h-[90px]`), centered 970px area, subtle 10px `#999999` "বিজ্ঞাপন" label. | 100% matched to reference |
+| **03. Hero (3/6/3)** | Left and right columns had duplicate kickers on every item; lead photo had no credit. | Implemented `parseKickerAndTitle` helper to prevent duplicate kickers; lead photo now displays `ছবি: খবরঘর আলোকচিত্র` caption; right column retains kickers only on top 2 items (মতামত / অভিমত). | 100% matched to reference |
+| **04. Billboard Ad & Trending** | Chip background and borders lacked the subtle Prothom Alo pill shape; billboard height was inconsistent. | Chip background refined to `#FAFAFA` with 1px `#E2E2E2` border; billboard height normalized to 280px with centered 970px area. | 100% matched to reference |
+| **05. Video Carousel** | Card had card-level padding wrapping the image and button had shadow. | Image made completely flush with top and side edges; centered 15px bold headlines and relative time; removed button shadow. | 100% matched to reference |
+| **06. Promo Strip** | Card aspect ratios and kicker colors needed exact matching. | 4 cards with `#141414` deep tones, 45% image left, white 15px bold headlines, and color-coded kickers. | 100% matched to reference |
+| **07. Most-Read + Sports** | Most-read tab had active underline spanning entire tab row; headlines showed kickers; hover zoom on sports. | Underline now spans only the active tab word ("পঠিত"); stripped kickers from most-read items to match raw headlines; removed hover zoom. | 100% matched to reference |
+| **08. বাংলাদেশ** | Filter selects were too narrow; lead headline had duplicate kicker prefix. | Selects styled with balanced 140px width and 34px height; `parseKickerAndTitle` ensures single clean red kicker. | 100% matched to reference |
+| **09. বিশ্ব** | Lead headline showed duplicate kicker; bottom-right card lacked clean kicker separation. | Integrated `parseKickerAndTitle` for single `জলবায়ু সম্মেলন •` kicker on lead and `হুথি হামলা •` on 4th card. | 100% matched to reference |
+| **10. বিনোদন** | Camera badge was placed on middle row instead of top item. | Moved camera badge overlay to top thumbnail (`idx === 0`); center feature card cleanly structured at 4:3. | 100% matched to reference |
+| **11. জীবনযাপন** | Card aspects and camera badges required verification. | 4 equal cards with camera badges on 3rd and 4th cards; 1px vertical hairlines separating columns. | 100% matched to reference |
+| **12. মতামত** | Boxed lead headline had duplicate kicker; pen avatar placeholder had inner shadow. | Removed `shadow-inner`; white headline text over `#0A1020` inline highlight; 4 author rows with 56px gray circle. | 100% matched to reference |
+| **13. বাণিজ্য** | 2x2 grid showed duplicate kickers; fallback images were plain gray boxes. | Implemented deterministic editorial SVG fallbacks for all image cards; clean single kicker for lead item. | 100% matched to reference |
+| **Images & Assets** | Slow or offline CDN images showed flat gray rectangles. | Enhanced `LazyImage.jsx` with instant editorial gradient SVG background with "খবরঘর" watermark. | Zero empty gray rectangles |
