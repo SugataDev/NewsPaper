@@ -16,7 +16,7 @@
     "test": "npm run test -w server",
     "qa:shot": "node scripts/shot.mjs",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d client/dist --dotfiles"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
